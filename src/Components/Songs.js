@@ -94,8 +94,8 @@ export const songs = [
     title: "Nage-Komi",
     answers: [
       "nage komi",
-      "throwing practice",
-      "repetitive throwing"
+      "throwing",
+      "repetitive stoppage"
     ],
     audio: "./src/assets/audio/Nage_Komi.mp3"
   },
