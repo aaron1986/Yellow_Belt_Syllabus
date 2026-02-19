@@ -185,17 +185,20 @@ function App() {
         />
       </audio>
 
-      <div className="voice-status">
-        {listening && <h2>Listening...</h2>}
+<div className="voice-status">
+  {listening && <h2>Listening...</h2>}
 
-        {!listening && !answered && (
-          <h2>Speak now...</h2>
-        )}
+  {!listening && !answered && (
+    <button onClick={startListening}>
+      Speak Now
+    </button>
+  )}
 
-        {transcript && (
-          <p>You said: {transcript}</p>
-        )}
-      </div>
+  {transcript && (
+    <p>You said: {transcript}</p>
+  )}
+</div>
+
 
       {result && <h2>{result}</h2>}
 
