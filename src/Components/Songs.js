@@ -37,7 +37,7 @@ export const songs = [
       "left natural posture",
       "left stance"
     ],
-    audio: "./src/assets/audio/Hidari_Shizentai.mp3"
+    audio: "./public/audio/Hidari_Shizentai.mp3"
   },
   {
     id: 5,
@@ -47,7 +47,7 @@ export const songs = [
       "right natural posture",
       "right stance"
     ],
-    audio: "./src/assets/audio/Migi_Shizentai.mp3"
+    audio: "./public/audio/Migi_Shizentai.mp3"
   },
   {
     id: 6,
@@ -57,7 +57,7 @@ export const songs = [
       "hold down",
       "pinning techniques"
     ],
-    audio: "./src/assets/audio/Osaekomi_Waza.mp3"
+    audio: "./public/audio/Osaekomi_Waza.mp3"
   },
   {
     id: 7,
@@ -67,7 +67,7 @@ export const songs = [
       "standing techniques",
       "throwing techniques standing"
     ],
-    audio: "./src/assets/audio/Tachi_Waza.mp3"
+    audio: "./public/audio/Tachi_Waza.mp3"
   },
   {
     id: 8,
@@ -77,7 +77,7 @@ export const songs = [
       "upper four quarters hold",
       "upper hold"
     ],
-    audio: "./src/assets/audio/Kami_Shiho_Gatame.mp3"
+    audio: "./public/audio/Kami_Shiho_Gatame.mp3"
   },
   {
     id: 9,
@@ -87,7 +87,7 @@ export const songs = [
       "gripping",
       "grip fighting"
     ],
-    audio: "./src/assets/audio/Kumi_Kata.mp3"
+    audio: "./public/audio/Kumi_Kata.mp3"
   },
   {
     id: 10,
@@ -97,7 +97,7 @@ export const songs = [
       "throwing",
       "repetitive stoppage"
     ],
-    audio: "./src/assets/audio/Nage_Komi.mp3"
+    audio: "./public/audio/Nage_Komi.mp3"
   },
   {
     id: 11,
@@ -107,7 +107,7 @@ export const songs = [
       "front breakfall",
       "forward breakfall"
     ],
-    audio: "./src/assets/audio/Mae_Ukemi.mp3"
+    audio: "./public/audio/Mae_Ukemi.mp3"
   },
   {
     id: 12,
@@ -117,7 +117,7 @@ export const songs = [
       "ouchi gari",
       "major inner reap"
     ],
-    audio: "./src/assets/audio/O_Uchi_Gari.mp3"
+    audio: "./public/audio/O_Uchi_Gari.mp3"
   },
   {
     id: 13,
@@ -127,6 +127,6 @@ export const songs = [
       "lengthwise four quarters hold",
       "mount hold"
     ],
-    audio: "./src/assets/audio/Tate_Shiho_Gatame.mp3"
+    audio: "./public/audio/Tate_Shiho_Gatame.mp3"
   }
 ];
