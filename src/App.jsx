@@ -1,16 +1,20 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { songs } from "./Components/Songs";
+import { supabase } from "./lib/supabaseClient";
+
 import SpeechRecognition, {
   useSpeechRecognition
 } from "react-speech-recognition";
 
 function App() {
+  const [songs, setSongs] = useState([]);
+
   const [currentSong, setCurrentSong] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [result, setResult] = useState(null);
   const [score, setScore] = useState(0);
   const [gameWon, setGameWon] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const {
     transcript,
@@ -20,8 +24,44 @@ function App() {
   } = useSpeechRecognition();
 
   useEffect(() => {
-    pickRandomSong();
+    fetchSongs();
   }, []);
+
+  async function fetchSongs() {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("songs")
+      .select(`
+        id,
+        title,
+        audio_path,
+        song_answers ( answer )
+      `)
+      .order("id");
+
+    if (error) {
+      console.error(error);
+      setLoading(false);
+      return;
+    }
+
+    const formatted = data.map(song => ({
+      id: song.id,
+      title: song.title,
+      audio: song.audio_path,
+      answers: song.song_answers.map(a => a.answer)
+    }));
+
+    setSongs(formatted);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if (songs.length > 0) {
+      pickRandomSong();
+    }
+  }, [songs]);
 
   const pickRandomSong = () => {
     let randomSong;
@@ -47,7 +87,6 @@ function App() {
       language: "en-GB"
     });
 
-    // Stop listening after 20 seconds
     setTimeout(() => {
       SpeechRecognition.stopListening();
     }, 20000);
@@ -88,12 +127,21 @@ function App() {
     }
   }, [listening]);
 
+  // if Browser unsupported!
   if (!browserSupportsSpeechRecognition) {
     return (
       <div className="app">
         <h2>
           Your browser does not support speech recognition.
         </h2>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="app">
+        <h2>Loading techniques...</h2>
       </div>
     );
   }
@@ -124,6 +172,7 @@ function App() {
       <h1>Guess the Judo Technique</h1>
 
       <h2>Streak: {score} / 15</h2>
+
       <audio
         key={currentSong.audio}
         controls
@@ -135,6 +184,7 @@ function App() {
           type="audio/mpeg"
         />
       </audio>
+
       <div className="voice-status">
         {listening && <h2>Listening...</h2>}
 
