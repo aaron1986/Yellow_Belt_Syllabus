@@ -7,7 +7,7 @@ export const songs = [
       "seoi nage",
       "ippon sayoi nage"
     ],
-    audio: "./src/assets/audio/Ippon_Seoi_Nage.mp3"
+    audio: "./public/audio/Ippon_Seoi_Nage.mp3"
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const songs = [
       "tai-otoshi",
       "body drop"
     ],
-    audio: "./src/assets/audio/Tai_Otoshi.mp3"
+    audio: "./public/audio/Tai_Otoshi.mp3"
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ export const songs = [
       "four quarters hold",
       "side four quarter hold"
     ],
-    audio: "./src/assets/audio/Yoko_Shiho_Gatame.mp3"
+    audio: "./public/audio/Yoko_Shiho_Gatame.mp3"
   },
   {
     id: 4,
