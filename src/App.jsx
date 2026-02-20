@@ -1,14 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabaseClient";
-
 import SpeechRecognition, {
   useSpeechRecognition
 } from "react-speech-recognition";
 
 function App() {
   const [songs, setSongs] = useState([]);
-
   const [currentSong, setCurrentSong] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [result, setResult] = useState(null);
@@ -75,10 +73,11 @@ function App() {
     setAnswered(false);
     setResult(null);
     resetTranscript();
+    SpeechRecognition.stopListening();
   };
 
   const startListening = () => {
-    if (answered || gameWon) return;
+    if (answered || gameWon || listening) return;
 
     resetTranscript();
 
@@ -89,11 +88,11 @@ function App() {
 
     setTimeout(() => {
       SpeechRecognition.stopListening();
-    }, 20000);
+    }, 10000);
   };
 
   const handleVoiceGuess = () => {
-    if (answered || gameWon) return;
+    if (answered || gameWon || !currentSong) return;
 
     const spoken = transcript.toLowerCase();
 
@@ -102,22 +101,20 @@ function App() {
     );
 
     setAnswered(true);
+    SpeechRecognition.stopListening();
 
     if (correct) {
       setScore(prev => {
         const newScore = prev + 1;
-
         if (newScore === 15) {
           setGameWon(true);
         }
-
         return newScore;
       });
-
       setResult("Correct Answer!");
     } else {
       setScore(0);
-      setResult("Wrong Answer Reset!");
+      setResult("Wrong Answer - Streak Reset!");
     }
   };
 
@@ -127,13 +124,10 @@ function App() {
     }
   }, [listening]);
 
-  // if Browser unsupported!
   if (!browserSupportsSpeechRecognition) {
     return (
       <div className="app">
-        <h2>
-          Your browser does not support speech recognition.
-        </h2>
+        <h2>Your browser does not support speech recognition.</h2>
       </div>
     );
   }
@@ -170,35 +164,25 @@ function App() {
   return (
     <div className="app">
       <h1>Guess the Judo Technique</h1>
-
       <h2>Streak: {score} / 15</h2>
 
-      <audio
-        key={currentSong.audio}
-        controls
-        autoPlay
-        onEnded={startListening}
-      >
-        <source
-          src={currentSong.audio}
-          type="audio/mpeg"
-        />
+      <audio key={currentSong.audio} controls autoPlay>
+        <source src={currentSong.audio} type="audio/mpeg" />
       </audio>
 
-<div className="voice-status">
-  {listening && <h2>Listening...</h2>}
+      <div className="voice-status">
+        {listening && <h2>🎤 Listening...</h2>}
 
-  {!listening && !answered && (
-    <button onClick={startListening}>
-      Speak Now
-    </button>
-  )}
+        {!listening && !answered && (
+          <button onClick={startListening}>
+            🎤 Tap to Speak
+          </button>
+        )}
 
-  {transcript && (
-    <p>You said: {transcript}</p>
-  )}
-</div>
-
+        {transcript && (
+          <p>You said: {transcript}</p>
+        )}
+      </div>
 
       {result && <h2>{result}</h2>}
 
