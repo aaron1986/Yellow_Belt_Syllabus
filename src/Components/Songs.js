@@ -3,9 +3,7 @@ export const songs = [
     id: 1,
     title: "Ippon Seoi Nage",
     answers: [
-      "ippon seoi nage",
-      "seoi nage",
-      "ippon sayoi nage"
+      { text: "one arm shoulder throw", isCorrect: true }
     ],
     audio: "/audio/Ippon_Seoi_Nage.mp3"
   },
@@ -13,9 +11,7 @@ export const songs = [
     id: 2,
     title: "Tai-Otoshi",
     answers: [
-      "tai otoshi",
-      "tai-otoshi",
-      "body drop"
+      {text: "hand throw body drop", isCorrect: true}
     ],
     audio: "/audio/Tai_Otoshi.mp3"
   },
@@ -23,9 +19,7 @@ export const songs = [
     id: 3,
     title: "Yoko Shiho Gatame",
     answers: [
-      "yoko shiho gatame",
-      "four quarters hold",
-      "side four quarter hold"
+      {text: "side four quarter hold", isCorrect: true}
     ],
     audio: "/audio/Yoko_Shiho_Gatame.mp3"
   },
@@ -33,9 +27,7 @@ export const songs = [
     id: 4,
     title: "Hidari Shizentai",
     answers: [
-      "hidari shizentai",
-      "left natural posture",
-      "left stance"
+      {text: "left standing grip", isCorrect: true}
     ],
     audio: "/audio/Hidari_Shizentai.mp3"
   },
@@ -43,9 +35,7 @@ export const songs = [
     id: 5,
     title: "Migi Shizentai",
     answers: [
-      "migi shizentai",
-      "right natural posture",
-      "right stance"
+      {text: "right standing grip", isCorrect: true}
     ],
     audio: "/audio/Migi_Shizentai.mp3"
   },
@@ -53,9 +43,7 @@ export const songs = [
     id: 6,
     title: "Osaekomi-waza",
     answers: [
-      "osaekomi waza",
-      "hold down",
-      "pinning techniques"
+      {text: "hold down", isCorrect: true}
     ],
     audio: "/audio/Osaekomi_Waza.mp3"
   },
@@ -63,9 +51,7 @@ export const songs = [
     id: 7,
     title: "Tachi-waza",
     answers: [
-      "tachi waza",
-      "standing techniques",
-      "throwing techniques standing"
+      {text: "standing techniques", isCorrect: true}
     ],
     audio: "/audio/Tachi_Waza.mp3"
   },
@@ -73,29 +59,23 @@ export const songs = [
     id: 8,
     title: "Kami-shiho-gatame",
     answers: [
-      "kami shiho gatame",
-      "upper four quarters hold",
-      "upper hold"
+      {text: "upper four quarters hold", isCorrect: true}
     ],
     audio: "/audio/Kami_Shiho_Gatame.mp3"
   },
   {
     id: 9,
-    title: "Kumi-Kata",
+    title: "Kami-Kata",
     answers: [
-      "kumi kata",
-      "gripping",
-      "grip fighting"
+      {text: "gripping", isCorrect: true}
     ],
-    audio: "/audio/Kumi_Kata.mp3"
+    audio: "/audio/Kami_Kata.mp3"
   },
   {
     id: 10,
     title: "Nage-Komi",
     answers: [
-      "nage komi",
-      "throwing",
-      "repetitive stoppage"
+      {text: "throwing", isCorrect: true}
     ],
     audio: "/audio/Nage_Komi.mp3"
   },
@@ -103,9 +83,7 @@ export const songs = [
     id: 11,
     title: "Mae Ukemi",
     answers: [
-      "mae ukemi",
-      "front breakfall",
-      "forward breakfall"
+      {text: "front breakfall", isCorrect: true}
     ],
     audio: "/audio/Mae_Ukemi.mp3"
   },
@@ -113,9 +91,7 @@ export const songs = [
     id: 12,
     title: "O-uchi-gari",
     answers: [
-      "o uchi gari",
-      "ouchi gari",
-      "major inner reap"
+      {text: "major inner reaping", isCorrect: true}   
     ],
     audio: "/audio/O_Uchi_Gari.mp3"
   },
@@ -123,9 +99,7 @@ export const songs = [
     id: 13,
     title: "Tate-shiho-gatame",
     answers: [
-      "tate shiho gatame",
-      "lengthwise four quarters hold",
-      "mount hold"
+      {text: "lengthwise four quarters hold", isCorrect: true}
     ],
     audio: "/audio/Tate_Shiho_Gatame.mp3"
   }

@@ -21,6 +21,9 @@ function App() {
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
 
+  // -----------------------------
+  // Fetch from Supabase
+  // -----------------------------
   useEffect(() => {
     fetchSongs();
   }, []);
@@ -34,9 +37,8 @@ function App() {
         id,
         title,
         audio_path,
-        song_answers ( answer )
-      `)
-      .order("id");
+        song_answers ( answer, is_correct )
+      `);
 
     if (error) {
       console.error(error);
@@ -48,13 +50,17 @@ function App() {
       id: song.id,
       title: song.title,
       audio: song.audio_path,
-      answers: song.song_answers.map(a => a.answer)
+      correctAnswer:
+        song.song_answers.find(a => a.is_correct)?.answer
     }));
 
     setSongs(formatted);
     setLoading(false);
   }
 
+  // -----------------------------
+  // Pick random song
+  // -----------------------------
   useEffect(() => {
     if (songs.length > 0) {
       pickRandomSong();
@@ -76,8 +82,11 @@ function App() {
     SpeechRecognition.stopListening();
   };
 
+  // -----------------------------
+  // Start Listening
+  // -----------------------------
   const startListening = () => {
-    if (answered || gameWon || listening) return;
+    if (answered || gameWon) return;
 
     resetTranscript();
 
@@ -88,17 +97,21 @@ function App() {
 
     setTimeout(() => {
       SpeechRecognition.stopListening();
-    }, 10000);
+    }, 8000);
   };
 
+  // -----------------------------
+  // Check Answer
+  // -----------------------------
   const handleVoiceGuess = () => {
-    if (answered || gameWon || !currentSong) return;
+    if (!currentSong || answered || gameWon) return;
 
-    const spoken = transcript.toLowerCase();
+    const spoken = transcript.toLowerCase().trim();
 
-    const correct = currentSong.answers.some(ans =>
-      spoken.includes(ans.toLowerCase())
-    );
+    const correct =
+      spoken.includes(
+        currentSong.correctAnswer?.toLowerCase()
+      );
 
     setAnswered(true);
     SpeechRecognition.stopListening();
@@ -106,9 +119,7 @@ function App() {
     if (correct) {
       setScore(prev => {
         const newScore = prev + 1;
-        if (newScore === 15) {
-          setGameWon(true);
-        }
+        if (newScore === 15) setGameWon(true);
         return newScore;
       });
       setResult("Correct Answer!");
@@ -118,26 +129,22 @@ function App() {
     }
   };
 
+  // Auto check when listening stops
   useEffect(() => {
     if (!listening && transcript && !answered) {
       handleVoiceGuess();
     }
   }, [listening]);
 
+  // -----------------------------
+  // UI States
+  // -----------------------------
   if (!browserSupportsSpeechRecognition) {
-    return (
-      <div className="app">
-        <h2>Your browser does not support speech recognition.</h2>
-      </div>
-    );
+    return <h2>Speech recognition not supported.</h2>;
   }
 
   if (loading) {
-    return (
-      <div className="app">
-        <h2>Loading techniques...</h2>
-      </div>
-    );
+    return <h2>Loading techniques...</h2>;
   }
 
   if (gameWon) {
@@ -145,7 +152,6 @@ function App() {
       <div className="app">
         <h1>YOU WIN!</h1>
         <h2>15 techniques in a row!</h2>
-
         <button
           onClick={() => {
             setScore(0);
@@ -166,25 +172,22 @@ function App() {
       <h1>Guess the Judo Technique</h1>
       <h2>Streak: {score} / 15</h2>
 
-      <audio key={currentSong.audio} controls autoPlay>
+      <audio
+        key={currentSong.audio}
+        controls
+        autoPlay
+        onEnded={startListening}
+      >
         <source src={currentSong.audio} type="audio/mpeg" />
       </audio>
 
-      <div className="voice-status">
-        {listening && <h2>🎤 Listening...</h2>}
-
-        {!listening && !answered && (
-          <button onClick={startListening}>
-            🎤 Tap to Speak
-          </button>
-        )}
-
-        {transcript && (
-          <p>You said: {transcript}</p>
-        )}
-      </div>
-
+      {listening && <h2>🎤 Listening...</h2>}
+      {transcript && <p>You said: {transcript}</p>}
       {result && <h2>{result}</h2>}
+
+      {answered && result.includes("Wrong") && (
+        <p>Correct Answer: {currentSong.correctAnswer}</p>
+      )}
 
       {answered && !gameWon && (
         <button onClick={pickRandomSong}>
