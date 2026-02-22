@@ -11,13 +11,9 @@ function App() {
   const [score, setScore] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [audioPlayed, setAudioPlayed] = useState(false); 
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
     fetchSongs();
@@ -25,29 +21,20 @@ function App() {
 
   async function fetchSongs() {
     setLoading(true);
-
     const { data, error } = await supabase
       .from("songs")
-      .select(`
-        id,
-        title,
-        audio_path,
-        song_answers ( answer, is_correct )
-      `);
-
+      .select(`id, title, audio_path, song_answers ( answer, is_correct )`);
     if (error) {
       console.error(error);
       setLoading(false);
       return;
     }
-
     const formatted = data.map(song => ({
       id: song.id,
       title: song.title,
       audio: song.audio_path,
       correctAnswer: song.song_answers.find(a => a.is_correct)?.answer
     }));
-
     setSongs(formatted);
     setLoading(false);
   }
@@ -65,16 +52,15 @@ function App() {
     setCurrentSong(randomSong);
     setAnswered(false);
     setResult(null);
+    setAudioPlayed(false);
     resetTranscript();
     SpeechRecognition.stopListening();
   };
 
-
   const startListening = () => {
-    if (answered || gameWon || listening) return;
+    if (answered || gameWon || listening || !audioPlayed) return; 
 
     resetTranscript();
-
     SpeechRecognition.startListening({
       continuous: false,
       language: "en-GB"
@@ -82,8 +68,7 @@ function App() {
 
     setTimeout(() => {
       SpeechRecognition.stopListening();
-    }, 20000); 
-    //listen for 20 secs
+    }, 20000); //20 secs
   };
 
   const handleVoiceGuess = () => {
@@ -147,13 +132,20 @@ function App() {
       <h1>Guess the Judo Technique</h1>
       <h2>Streak: {score} / 15</h2>
 
-      <audio key={currentSong.audio} controls autoPlay>
+      <audio
+        key={currentSong.audio}
+        controls
+        onPlay={() => setAudioPlayed(true)}
+      >
         <source src={currentSong.audio} type="audio/mpeg" />
       </audio>
 
       {!answered && !gameWon && (
         <div className="btn-section">
-        <button className="button-19" onClick={startListening} disabled={listening}>
+        <button className="button-19"
+          onClick={startListening}
+          disabled={listening || !audioPlayed} 
+        >
           Speak...
         </button>
         </div>
