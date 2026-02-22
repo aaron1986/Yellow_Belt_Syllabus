@@ -1,9 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabaseClient";
-import SpeechRecognition, {
-  useSpeechRecognition
-} from "react-speech-recognition";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 function App() {
   const [songs, setSongs] = useState([]);
@@ -21,9 +19,6 @@ function App() {
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
 
-  // -----------------------------
-  // Fetch from Supabase
-  // -----------------------------
   useEffect(() => {
     fetchSongs();
   }, []);
@@ -50,29 +45,21 @@ function App() {
       id: song.id,
       title: song.title,
       audio: song.audio_path,
-      correctAnswer:
-        song.song_answers.find(a => a.is_correct)?.answer
+      correctAnswer: song.song_answers.find(a => a.is_correct)?.answer
     }));
 
     setSongs(formatted);
     setLoading(false);
   }
 
-  // -----------------------------
-  // Pick random song
-  // -----------------------------
   useEffect(() => {
-    if (songs.length > 0) {
-      pickRandomSong();
-    }
+    if (songs.length > 0) pickRandomSong();
   }, [songs]);
 
   const pickRandomSong = () => {
     let randomSong;
-
     do {
-      randomSong =
-        songs[Math.floor(Math.random() * songs.length)];
+      randomSong = songs[Math.floor(Math.random() * songs.length)];
     } while (randomSong?.id === currentSong?.id);
 
     setCurrentSong(randomSong);
@@ -82,11 +69,9 @@ function App() {
     SpeechRecognition.stopListening();
   };
 
-  // -----------------------------
-  // Start Listening
-  // -----------------------------
+
   const startListening = () => {
-    if (answered || gameWon) return;
+    if (answered || gameWon || listening) return;
 
     resetTranscript();
 
@@ -97,21 +82,15 @@ function App() {
 
     setTimeout(() => {
       SpeechRecognition.stopListening();
-    }, 8000);
+    }, 20000); 
+    //listen for 20 secs
   };
 
-  // -----------------------------
-  // Check Answer
-  // -----------------------------
   const handleVoiceGuess = () => {
     if (!currentSong || answered || gameWon) return;
 
     const spoken = transcript.toLowerCase().trim();
-
-    const correct =
-      spoken.includes(
-        currentSong.correctAnswer?.toLowerCase()
-      );
+    const correct = spoken.includes(currentSong.correctAnswer?.toLowerCase());
 
     setAnswered(true);
     SpeechRecognition.stopListening();
@@ -129,18 +108,14 @@ function App() {
     }
   };
 
-  // Auto check when listening stops
   useEffect(() => {
     if (!listening && transcript && !answered) {
       handleVoiceGuess();
     }
   }, [listening]);
 
-  // -----------------------------
-  // UI States
-  // -----------------------------
   if (!browserSupportsSpeechRecognition) {
-    return <h2>Speech recognition not supported.</h2>;
+    return <h2>Your browser does not support speech recognition.</h2>;
   }
 
   if (loading) {
@@ -172,27 +147,30 @@ function App() {
       <h1>Guess the Judo Technique</h1>
       <h2>Streak: {score} / 15</h2>
 
-      <audio
-        key={currentSong.audio}
-        controls
-        autoPlay
-        onEnded={startListening}
-      >
+      <audio key={currentSong.audio} controls autoPlay>
         <source src={currentSong.audio} type="audio/mpeg" />
       </audio>
 
-      {listening && <h2>🎤 Listening...</h2>}
+      {!answered && !gameWon && (
+        <div className="btn-section">
+        <button className="button-19" onClick={startListening} disabled={listening}>
+          Speak...
+        </button>
+        </div>
+      )}
+
+      {listening && <h2>Listening...</h2>}
+
       {transcript && <p>You said: {transcript}</p>}
+
       {result && <h2>{result}</h2>}
 
-      {answered && result.includes("Wrong") && (
+      {answered && result?.includes("Wrong") && (
         <p>Correct Answer: {currentSong.correctAnswer}</p>
       )}
 
       {answered && !gameWon && (
-        <button onClick={pickRandomSong}>
-          Next Technique
-        </button>
+        <button onClick={pickRandomSong}>Next Technique</button>
       )}
     </div>
   );

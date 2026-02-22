@@ -69,7 +69,7 @@ export const songs = [
     answers: [
       {text: "gripping", isCorrect: true}
     ],
-    audio: "/audio/Kami_Kata.mp3"
+    audio: "/audio/Kumi_Kata.mp3"
   },
   {
     id: 10,
